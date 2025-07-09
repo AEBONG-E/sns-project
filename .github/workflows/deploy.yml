@@ -31,6 +31,5 @@ jobs:
           heroku_email: tjdgns1923@gmail.com
           # The appname to use for deploying/updating
           heroku_app_name: fc-sns
-          # Prevent Heroku CLI related commands from running
+          # Prevent execution of 'heroku create' command
           dontautocreate: true
-          usedocker: true
