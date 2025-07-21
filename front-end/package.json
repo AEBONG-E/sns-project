@@ -64,6 +64,10 @@
   },
   "overrides": {
     "chalk": "4.1.2"
+  },
+  "engines": {
+    "node": "18.x",
+    "npm": "8.x"
   }
 
 }
