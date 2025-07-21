@@ -17,6 +17,16 @@ jobs:
           curl https://cli-assets.heroku.com/install.sh | sh
           echo "/usr/local/bin" >> $GITHUB_PATH
 
+      - name: Install heroku-repo plugin
+        run: heroku plugins:install heroku-repo
+
+      - name: Purge Heroku cache
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_DEPLOY_KEY }}
+        run: |
+          echo $HEROKU_API_KEY | heroku auth:token
+          heroku repo:purge_cache -a fc-sns
+
       - name: Deploy to Heroku
         uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
