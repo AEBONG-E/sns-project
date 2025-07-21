@@ -42,7 +42,7 @@ tasks.named('test') {
 
 node {
 	nodeModulesDir = file("$projectDir/front-end")
-	version = '16.20.2' // chalk@4와 호환성 높은 버전
+	version = '18.3.0'
 	download = true
 }
 
