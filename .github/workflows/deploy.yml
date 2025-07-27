@@ -1,36 +1,47 @@
+# 워크플로우 이름 정의
 name: Deploy
 
+# 워크플로우 실행 트리거 설정
 on:
+  # main 브랜치에 push가 발생했을 때 실행
   push:
     branches: [ main ]
+  # 수동 실행도 가능하게 설정 (GitHub UI에서 Run workflow 버튼으로)
   workflow_dispatch:
 
 jobs:
   build:
+    # GitHub Actions가 실행될 환경 지정 (최신 Ubuntu 리눅스 이미지 사용)
     runs-on: ubuntu-latest
 
     steps:
+      # GitHub repository의 소스를 체크아웃 (필수)
       - uses: actions/checkout@v3
 
+      # Heroku CLI 설치 (공식 설치 스크립트를 통해)
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
-          echo "/usr/local/bin" >> $GITHUB_PATH
+          echo "/usr/local/bin" >> $GITHUB_PATH  # Heroku CLI 경로를 시스템 PATH에 추가
 
+      # 캐시 제거에 필요한 heroku-repo 플러그인 설치
       - name: Install heroku-repo plugin
         run: heroku plugins:install heroku-repo
 
+      # Heroku 앱의 캐시 삭제
       - name: Purge Heroku cache
         env:
+          # secrets에 저장된 Heroku API 키를 환경 변수로 주입
           HEROKU_API_KEY: ${{ secrets.HEROKU_DEPLOY_KEY }}
         run: |
-          echo $HEROKU_API_KEY | heroku auth:token
-          heroku repo:purge_cache -a fc-sns
+          echo $HEROKU_API_KEY | heroku auth:token  # 인증 (실제 로그인은 되지 않음. 무의미한 줄일 수 있음)
+          heroku repo:purge_cache -a fc-sns         # fc-sns 앱의 캐시 삭제
 
+      # Heroku에 배포 (외부 액션 사용)
       - name: Deploy to Heroku
-        uses: AkhileshNS/heroku-deploy@v3.12.12
+        uses: AkhileshNS/heroku-deploy@v3.12.12  # heroku-deploy 액션 사용
         with:
-          heroku_api_key: ${{ secrets.HEROKU_DEPLOY_KEY }}
-          heroku_email: tjdgns1923@gmail.com
-          heroku_app_name: fc-sns
-          dontautocreate: true
+          heroku_api_key: ${{ secrets.HEROKU_DEPLOY_KEY }}  # 인증에 사용할 API 키
+          heroku_email: tjdgns1923@gmail.com                 # Heroku 계정 이메일
+          heroku_app_name: fc-sns                           # 배포할 Heroku 앱 이름
+          dontautocreate: true                              # Heroku 앱이 없을 경우 새로 생성하지 않음
