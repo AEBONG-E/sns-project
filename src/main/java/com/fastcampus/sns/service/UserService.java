@@ -1,5 +1,6 @@
 package com.fastcampus.sns.service;
 
+import com.fastcampus.sns.exception.ErrorCode;
 import com.fastcampus.sns.exception.SnsApplicationException;
 import com.fastcampus.sns.model.User;
 import com.fastcampus.sns.model.entity.UserEntity;
@@ -19,26 +20,24 @@ public class UserService {
     public User join(String userName, String password) {
 
         // 회원가입하려는 userName 으로 회원가입된 user 가 있는지 체크
-        Optional<UserEntity> userEntity = userEntityRepository.findByUserName(userName);
+        userEntityRepository.findByUserName(userName).ifPresent(it -> {
+            throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userName));
+        });
 
         // 회원가입 진행 = user 를 등록
-        userEntityRepository.save(userEntity.orElseThrow(SnsApplicationException::new));
-
-        return User.builder()
-                .userName(userName)
-                .password(password)
-                .build();
+        UserEntity userEntity = userEntityRepository.save(UserEntity.of(userName, password));
+        return User.fromEntity(userEntity);
     }
 
     // TODO : implement
     public String login(String userName, String password) {
 
         // 회원가입 여부 체크
-        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(() -> new SnsApplicationException());
+        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(() -> new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, ""));
 
         // password 체크
         if (!userEntity.getPassword().equals(password)) {
-            throw new SnsApplicationException();
+            throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, "");
         }
 
         // token 생성

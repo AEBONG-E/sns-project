@@ -1,4 +1,21 @@
 spring:
   mvc:
     path match:
-      matching-strategy: ant_path_matcher #?? path_pattern_parser
+      matching-strategy: ant_path_matcher
+
+  jpa:
+    database: postgresql
+    hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: update
+    properties.hibernate.format_sql: true
+    show-sql: true
+
+  datasource:
+    hikari.maximum-pool-size: 4
+    url: jdbc:postgresql://c18qegamsgjut6.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db5c60ni70r47r
+    username: u3ge6gnn8q57me
+    password: p377c6b672fbc97f900e44370fe717005a0aaa72b2cbab38f4f787cb6e8366805
+    driver-class-name: org.postgresql.Driver
+  sql.init.platform: postgres
+
+
