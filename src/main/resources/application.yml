@@ -18,4 +18,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   sql.init.platform: postgres
 
+jwt:
+  secret-key: fast_campus.sns-application-2022.secret_key
+  # 30 days
+  token:
+    expired-time-ms: 2592000000
+
 
