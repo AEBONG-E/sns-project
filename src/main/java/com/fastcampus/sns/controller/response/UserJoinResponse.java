@@ -18,7 +18,7 @@ public class UserJoinResponse {
     public static UserJoinResponse fromUser(User user) {
         return UserJoinResponse.builder()
                 .id(user.getId())
-                .userName(user.getUserName())
+                .userName(user.getUsername())
                 .role(user.getUserRole())
                 .build();
     }
