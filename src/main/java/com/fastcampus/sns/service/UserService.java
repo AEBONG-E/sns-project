@@ -3,6 +3,7 @@ package com.fastcampus.sns.service;
 import com.fastcampus.sns.exception.ErrorCode;
 import com.fastcampus.sns.exception.SnsApplicationException;
 import com.fastcampus.sns.model.User;
+import com.fastcampus.sns.model.UserRole;
 import com.fastcampus.sns.model.entity.UserEntity;
 import com.fastcampus.sns.repository.UserEntityRepository;
 import com.fastcampus.sns.util.JwtTokenUtils;
@@ -27,6 +28,7 @@ public class UserService {
     @Value("${jwt.token.expired-time-ms}")
     private Long expiredTimeMs;
 
+
     @Transactional
     public User join(String userName, String password) {
 
@@ -37,7 +39,7 @@ public class UserService {
         });
 
         // 회원가입 진행 = user 를 등록
-        UserEntity userEntity = userEntityRepository.save(UserEntity.of(userName, encoder.encode(password)));
+        UserEntity userEntity = userEntityRepository.save(UserEntity.of(userName, encoder.encode(password), UserRole.USER));
         return User.fromEntity(userEntity);
     }
 

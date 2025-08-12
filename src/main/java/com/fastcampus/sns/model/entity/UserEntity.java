@@ -57,10 +57,11 @@ public class UserEntity {
         }
     }
 
-    public static UserEntity of(String userName, String password) {
+    public static UserEntity of(String userName, String password, UserRole role) {
         return UserEntity.builder()
                 .userName(userName)
                 .password(password)
+                .role(role)
                 .build();
     }
 
