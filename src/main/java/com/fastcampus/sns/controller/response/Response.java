@@ -19,6 +19,13 @@ public class Response<T> {
                 .build();
     }
 
+    public static Response<Void> success() {
+        return Response.<Void>builder()
+                .resultCode("SUCCESS")
+                .result(null)
+                .build();
+    }
+
     public static <T> Response<T> success(T result) {
         return Response.<T>builder()
                 .resultCode("SUCCESS")
@@ -26,4 +33,14 @@ public class Response<T> {
                 .build();
     }
 
+    public String toStream() {
+        if (result == null) {
+            return "{" +
+                    "\"resultCode\":" + "\"" + resultCode + "\"," +
+                    "\"result\":" + null + "}";
+        }
+        return "{" +
+                "\"resultCode\":" + "\"" + resultCode + "\"," +
+                "\"result\":" + "\"" + result + "\"" + "}";
+    }
 }

@@ -3,6 +3,7 @@ package com.fastcampus.sns.service;
 import com.fastcampus.sns.exception.ErrorCode;
 import com.fastcampus.sns.exception.SnsApplicationException;
 import com.fastcampus.sns.model.entity.PostEntity;
+import com.fastcampus.sns.model.entity.UserEntity;
 import com.fastcampus.sns.repository.PostEntityRepository;
 import com.fastcampus.sns.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,10 @@ public class PostService {
     public void create(String title, String body, String userName) {
 
         // user find
-        userEntityRepository.findByUserName(userName).orElseThrow(()
+        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(()
                 -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userName)));
+        postEntityRepository.save(PostEntity.of(title, body, userEntity));
 
-        // post save
-        postEntityRepository.save(PostEntity.builder().build());
-
-        // return
 
     }
 
