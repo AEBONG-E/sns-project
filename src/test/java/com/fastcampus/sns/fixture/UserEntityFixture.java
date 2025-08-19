@@ -12,4 +12,12 @@ public class UserEntityFixture {
                 .build();
     }
 
+    public static UserEntity get(Integer userId, String userName, String password) {
+        return UserEntity.builder()
+                .id(userId)
+                .userName(userName)
+                .password(password)
+                .build();
+    }
+
 }
