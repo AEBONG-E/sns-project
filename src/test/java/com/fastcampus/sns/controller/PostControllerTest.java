@@ -7,6 +7,7 @@ import com.fastcampus.sns.exception.ErrorCode;
 import com.fastcampus.sns.exception.SnsApplicationException;
 import com.fastcampus.sns.fixture.PostEntityFixture;
 import com.fastcampus.sns.fixture.UserEntityFixture;
+import com.fastcampus.sns.model.Post;
 import com.fastcampus.sns.model.entity.PostEntity;
 import com.fastcampus.sns.model.entity.UserEntity;
 import com.fastcampus.sns.repository.PostEntityRepository;
@@ -88,9 +89,14 @@ public class PostControllerTest {
     void 포스트수정() throws Exception {
 
         Integer postId = 1;
-        String title = "title";
-        String body = "body";
+        String title = "title_1";
+        String body = "body_1";
         String userName = "userName";
+
+        PostEntity postEntityFixture = PostEntityFixture.get(postId, 1, userName, title, body);
+
+        // mocking
+        when(postService.modify(eq(title), eq(body), any(), any())).thenReturn(Post.fromEntity(postEntityFixture));
 
         mockMvc.perform(put("/api/v1/posts/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -98,8 +104,6 @@ public class PostControllerTest {
                                 PostModifyRequest.builder()
                                         .title(title)
                                         .body(body)
-                                        .userName(userName)
-                                        .postId(postId)
                                         .build()
                         ))
                 ).andDo(print())

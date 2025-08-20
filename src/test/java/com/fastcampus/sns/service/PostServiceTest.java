@@ -4,6 +4,7 @@ import com.fastcampus.sns.exception.ErrorCode;
 import com.fastcampus.sns.exception.SnsApplicationException;
 import com.fastcampus.sns.fixture.PostEntityFixture;
 import com.fastcampus.sns.fixture.UserEntityFixture;
+import com.fastcampus.sns.model.Post;
 import com.fastcampus.sns.model.entity.PostEntity;
 import com.fastcampus.sns.model.entity.UserEntity;
 import com.fastcampus.sns.repository.PostEntityRepository;
@@ -74,6 +75,7 @@ public class PostServiceTest {
         // mocking
         when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.of(userFixture));
         when(postEntityRepository.findById(postId)).thenReturn(Optional.of(postFixture));
+        when(postEntityRepository.saveAndFlush(any())).thenReturn(postFixture);
 
         Assertions.assertDoesNotThrow(() -> postService.modify(title, body, userName, postId));
 

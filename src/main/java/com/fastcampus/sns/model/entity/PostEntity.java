@@ -3,7 +3,6 @@ package com.fastcampus.sns.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.LastModifiedDate;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 
@@ -61,6 +60,11 @@ public class PostEntity {
                 .body(body)
                 .user(userEntity)
                 .build();
+    }
+
+    public void modify(String title, String body) {
+        this.title = title;
+        this.body = body;
     }
 
 }
