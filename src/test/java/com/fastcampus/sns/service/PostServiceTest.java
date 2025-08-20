@@ -124,4 +124,66 @@ public class PostServiceTest {
 
     }
 
+    @Test
+    void 포스트삭제가_성공한경우() {
+
+        Integer postId = 1;
+        String userName = "userName";
+        String title = "title";
+        String body = "body";
+
+        PostEntity postFixture = PostEntityFixture.get(postId, userName, title, body);
+        UserEntity userFixture = postFixture.getUser();
+
+        // mocking
+        when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.of(userFixture));
+        when(postEntityRepository.findById(postId)).thenReturn(Optional.of(postFixture));
+
+        Assertions.assertDoesNotThrow(() -> postService.delete(userName, postId));
+
+    }
+
+    @Test
+    void 포스트삭제시_포스트가_존재하지않는_경우() {
+
+        Integer postId = 1;
+        String title = "title";
+        String body = "body";
+        String userName = "userName";
+
+
+        PostEntity postFixture = PostEntityFixture.get(postId, userName, title, body);
+        UserEntity userFixture = postFixture.getUser();
+
+        // mocking
+        when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.of(userFixture));
+        when(postEntityRepository.findById(postId)).thenReturn(Optional.empty());
+
+        SnsApplicationException e = Assertions.assertThrows(SnsApplicationException.class, () -> postService.delete(userName, postId));
+        Assertions.assertEquals(ErrorCode.POST_NOT_FOUND, e.getErrorCode());
+
+    }
+
+    @Test
+    void 포스트삭제시_권한이_없는_경우() {
+
+        Integer postId = 1;
+        String title = "title";
+        String body = "body";
+        Integer userId = 2;
+        String userName = "userName";
+
+
+        PostEntity postFixture = PostEntityFixture.get(postId, 1, userName, title, body);        // user id = 1
+        UserEntity writer = UserEntityFixture.get(userId, "userName1", "password1"); // user id = 2
+
+        // mocking
+        when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.of(writer));
+        when(postEntityRepository.findById(postId)).thenReturn(Optional.of(postFixture));
+
+        SnsApplicationException e = Assertions.assertThrows(SnsApplicationException.class, () -> postService.delete(userName, postId));
+        Assertions.assertEquals(ErrorCode.INVALID_PERMISSION, e.getErrorCode());
+
+    }
+
 }
