@@ -4,7 +4,6 @@ import com.fastcampus.sns.exception.ErrorCode;
 import com.fastcampus.sns.exception.SnsApplicationException;
 import com.fastcampus.sns.fixture.PostEntityFixture;
 import com.fastcampus.sns.fixture.UserEntityFixture;
-import com.fastcampus.sns.model.Post;
 import com.fastcampus.sns.model.entity.PostEntity;
 import com.fastcampus.sns.model.entity.UserEntity;
 import com.fastcampus.sns.repository.PostEntityRepository;

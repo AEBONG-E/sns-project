@@ -2,7 +2,7 @@ package com.fastcampus.sns.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.SQLDelete;
 import java.sql.Timestamp;
 import java.time.Instant;
 
@@ -10,6 +10,7 @@ import java.time.Instant;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "update \"post\" set deleted_at = NOW() where id = ?")
 @Table(name = "\"post\"")
 @Entity
 public class PostEntity {
@@ -45,13 +46,6 @@ public class PostEntity {
     @PreUpdate
     void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
-    }
-
-    @LastModifiedDate
-    void deletedAt() {
-        if (this.id != null && this.deletedAt == null) {
-            this.deletedAt = Timestamp.from(Instant.now());
-        }
     }
 
     public static PostEntity of(String title, String body, UserEntity userEntity) {
