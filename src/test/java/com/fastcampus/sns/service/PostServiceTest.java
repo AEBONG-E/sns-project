@@ -202,8 +202,10 @@ public class PostServiceTest {
     void 나의피드목록요청이_성공한경우() {
 
         Pageable pageable = mock(Pageable.class);
+        UserEntity userEntity = mock(UserEntity.class);
 
-        when(postEntityRepository.findAllByUser(any(), pageable)).thenReturn(Page.empty());
+        when(userEntityRepository.findByUserName(any())).thenReturn(Optional.of(userEntity));
+        when(postEntityRepository.findAllByUser(userEntity, pageable)).thenReturn(Page.empty());
 
         Assertions.assertDoesNotThrow(() -> postService.findMy("", pageable));
 
