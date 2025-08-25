@@ -40,7 +40,7 @@ public class UserControllerTest {
                 // TODO : add request body
                 .content(objectMapper.writeValueAsBytes(
                         UserJoinRequest.builder()
-                                .userName(username)
+                                .name(username)
                                 .password(password)
                                 .build()
                 ))
@@ -61,7 +61,7 @@ public class UserControllerTest {
                 // TODO : add request body
                 .content(objectMapper.writeValueAsBytes(
                         UserJoinRequest.builder()
-                                .userName(username)
+                                .name(username)
                                 .password(password)
                                 .build()
                         ))
@@ -81,7 +81,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
                                 UserJoinRequest.builder()
-                                        .userName(username)
+                                        .name(username)
                                         .password(password)
                                         .build()
                         ))
@@ -102,7 +102,7 @@ public class UserControllerTest {
                         // TODO : add request body
                         .content(objectMapper.writeValueAsBytes(
                                 UserJoinRequest.builder()
-                                        .userName(username)
+                                        .name(username)
                                         .password(password)
                                         .build()
                         ))
@@ -123,7 +123,7 @@ public class UserControllerTest {
                         // TODO : add request body
                         .content(objectMapper.writeValueAsBytes(
                                 UserJoinRequest.builder()
-                                        .userName(username)
+                                        .name(username)
                                         .password(password)
                                         .build()
                         ))
