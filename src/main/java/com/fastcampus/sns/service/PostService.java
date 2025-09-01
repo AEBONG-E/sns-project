@@ -70,14 +70,14 @@ public class PostService {
     }
 
     public Page<Post> findList(Pageable pageable) {
-        return postEntityRepository.findAll(pageable).map(Post::fromEntity);
+        return postEntityRepository.findAllByDeletedAtIsNull(pageable).map(Post::fromEntity);
     }
 
     public Page<Post> findMy(String userName, Pageable pageable) {
         UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(() ->
                 new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userName)));
 
-        return postEntityRepository.findAllByUser(userEntity, pageable).map(Post::fromEntity);
+        return postEntityRepository.findAllByUserAndDeletedAtIsNull(userEntity, pageable).map(Post::fromEntity);
     }
 
 }

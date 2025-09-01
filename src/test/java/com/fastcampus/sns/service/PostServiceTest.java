@@ -192,7 +192,7 @@ public class PostServiceTest {
 
         Pageable pageable = mock(Pageable.class);
 
-        when(postEntityRepository.findAll(pageable)).thenReturn(Page.empty());
+        when(postEntityRepository.findAllByDeletedAtIsNull(pageable)).thenReturn(Page.empty());
 
         Assertions.assertDoesNotThrow(() -> postService.findList(pageable));
 
@@ -205,7 +205,7 @@ public class PostServiceTest {
         UserEntity userEntity = mock(UserEntity.class);
 
         when(userEntityRepository.findByUserName(any())).thenReturn(Optional.of(userEntity));
-        when(postEntityRepository.findAllByUser(userEntity, pageable)).thenReturn(Page.empty());
+        when(postEntityRepository.findAllByUserAndDeletedAtIsNull(userEntity, pageable)).thenReturn(Page.empty());
 
         Assertions.assertDoesNotThrow(() -> postService.findMy("", pageable));
 
