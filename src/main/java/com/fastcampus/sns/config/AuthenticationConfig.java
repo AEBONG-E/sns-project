@@ -34,10 +34,10 @@ public class AuthenticationConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .securityMatcher("/api/**")
                 .authorizeHttpRequests((authRequests) ->
                         authRequests
                                 .requestMatchers(PERMIT_ALL_PATTERNS).permitAll()
-                                .requestMatchers("/api/**").authenticated()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenFilter(key, userService), UsernamePasswordAuthenticationFilter.class)
