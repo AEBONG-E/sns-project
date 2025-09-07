@@ -27,8 +27,7 @@ public class PostService {
     public void create(String title, String body, String userName) {
 
         // user find
-        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(()
-                -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userName)));
+        UserEntity userEntity = getUserEntityOrException(userName);
         postEntityRepository.save(PostEntity.of(title, body, userEntity));
 
     }
@@ -36,12 +35,10 @@ public class PostService {
     @Transactional
     public Post modify(String title, String body, String userName, Integer postId) {
 
-        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(()
-                -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userName)));
+        UserEntity userEntity = getUserEntityOrException(userName);
 
         // post exist
-        PostEntity postEntity = postEntityRepository.findById(postId).orElseThrow(() ->
-                new SnsApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not found", postId)));
+        PostEntity postEntity = getPostEntityOrException(postId);
 
         // post permission
         if (postEntity.getUser() != userEntity) {
@@ -56,12 +53,10 @@ public class PostService {
     @Transactional
     public void delete(String userName, Integer postId) {
 
-        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(() ->
-                new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userName)));
+        UserEntity userEntity = getUserEntityOrException(userName);
 
         // post exist
-        PostEntity postEntity = postEntityRepository.findById(postId).orElseThrow(() ->
-                new SnsApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not found", postId)));
+        PostEntity postEntity = getPostEntityOrException(postId);
 
         // post permission
         if (postEntity.getUser() != userEntity) {
@@ -77,8 +72,7 @@ public class PostService {
     }
 
     public Page<Post> findMy(String userName, Pageable pageable) {
-        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(() ->
-                new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userName)));
+        UserEntity userEntity = getUserEntityOrException(userName);
 
         return postEntityRepository.findAllByUserAndDeletedAtIsNull(userEntity, pageable).map(Post::fromEntity);
     }
@@ -86,12 +80,10 @@ public class PostService {
     @Transactional
     public void like(Integer postId, String userName) {
 
-        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(() ->
-                new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userName)));
+        UserEntity userEntity = getUserEntityOrException(userName);
 
         // post exist
-        PostEntity postEntity = postEntityRepository.findById(postId).orElseThrow(() ->
-                new SnsApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not found", postId)));
+        PostEntity postEntity = getPostEntityOrException(postId);
 
         // check liked -> throw
         likeEntityRepository.findByUserAndPost(userEntity, postEntity).ifPresent(it -> {
@@ -106,8 +98,7 @@ public class PostService {
     public Integer likeCount(Integer postId) {
 
         // post exist
-        PostEntity postEntity = postEntityRepository.findById(postId).orElseThrow(() ->
-                new SnsApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not found", postId)));
+        PostEntity postEntity = getPostEntityOrException(postId);
 
         // count liked
         return likeEntityRepository.countByPost(postEntity);
@@ -117,6 +108,16 @@ public class PostService {
     @Transactional
     public void comment(Integer postId, String userName) {
 
+    }
+
+    private PostEntity getPostEntityOrException(Integer postId) {
+        return postEntityRepository.findById(postId).orElseThrow(() ->
+                new SnsApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not found", postId)));
+    }
+
+    private UserEntity getUserEntityOrException(String userName) {
+        return userEntityRepository.findByUserName(userName).orElseThrow(() ->
+                new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userName)));
     }
 
 }
