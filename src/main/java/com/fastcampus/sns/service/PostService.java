@@ -80,4 +80,9 @@ public class PostService {
         return postEntityRepository.findAllByUserAndDeletedAtIsNull(userEntity, pageable).map(Post::fromEntity);
     }
 
+    @Transactional
+    public void like(Integer postId, String userName) {
+
+    }
+
 }
