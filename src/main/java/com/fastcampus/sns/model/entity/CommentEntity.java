@@ -13,7 +13,7 @@ import java.time.Instant;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "update \"comment\" set deleted_at = NOW() where id = ?")
 @Table(name = "\"comment\"", indexes = {
-        @Index(name = "post_id_idx", columnList = "post_id")
+        @Index(name = "comment_post_id_idx", columnList = "post_id")
 })
 @Entity
 public class CommentEntity {
