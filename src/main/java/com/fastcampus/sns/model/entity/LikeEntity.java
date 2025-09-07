@@ -12,7 +12,9 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "update \"like\" set deleted_at = NOW() where id = ?")
-@Table(name = "\"like\"")
+@Table(name = "\"like\"", indexes = {
+        @Index(name = "post_id_idx", columnList = "post_id")
+})
 @Entity
 public class LikeEntity {
 
