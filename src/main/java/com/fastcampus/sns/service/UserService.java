@@ -68,7 +68,6 @@ public class UserService {
                 new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userName)));
     }
 
-    // TODO : alarm return
     public Page<Alarm> alarmList(String userName, Pageable pageable) {
 
         UserEntity userEntity = userEntityRepository.findByUserName(userName)
