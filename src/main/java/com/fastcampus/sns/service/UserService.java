@@ -9,6 +9,8 @@ import com.fastcampus.sns.repository.UserEntityRepository;
 import com.fastcampus.sns.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +63,12 @@ public class UserService {
     public User loadUserByUserName(String userName) {
         return userEntityRepository.findByUserName(userName).map(User::fromEntity).orElseThrow(() ->
                 new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userName)));
+    }
+
+    // TODO : alarm return
+    public Page<Void> alarmList(String userName, Pageable pageable) {
+
+        return Page.empty();
     }
 
 }
