@@ -96,7 +96,7 @@ public class PostService {
     }
 
     @Transactional
-    public Integer likeCount(Integer postId) {
+    public Long likeCount(Integer postId) {
 
         PostEntity postEntity = getPostEntityOrException(postId);
         // count liked
