@@ -9,11 +9,13 @@ import com.fastcampus.sns.model.Post;
 import com.fastcampus.sns.model.entity.*;
 import com.fastcampus.sns.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PostService {
@@ -23,6 +25,8 @@ public class PostService {
     private final LikeEntityRepository likeEntityRepository;
     private final CommentEntityRepository commentEntityRepository;
     private final AlarmEntityRepository alarmEntityRepository;
+
+    private final AlarmService alarmService;
 
     @Transactional
     public void create(String title, String body, String userName) {
@@ -89,12 +93,14 @@ public class PostService {
         // like save
         likeEntityRepository.save(LikeEntity.of(userEntity, postEntity));
 
-        alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_LIKE_ON_POST,
+        AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_LIKE_ON_POST,
                 AlarmArgs.builder()
                         .fromUserId(userEntity.getId())
                         .targetId(postEntity.getId())
                         .build()
         ));
+
+        alarmService.send(alarmEntity.getId(), postEntity.getUser().getId());
     }
 
     @Transactional
@@ -115,12 +121,14 @@ public class PostService {
         // comment save
         commentEntityRepository.save(CommentEntity.of(userEntity, postEntity, comment));
 
-        alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_COMMENT_ON_POST,
-                                                    AlarmArgs.builder()
-                                                            .fromUserId(userEntity.getId())
-                                                            .targetId(postEntity.getId())
-                                                            .build()
+        AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_COMMENT_ON_POST,
+                AlarmArgs.builder()
+                        .fromUserId(userEntity.getId())
+                        .targetId(postEntity.getId())
+                        .build()
         ));
+
+        alarmService.send(alarmEntity.getId(), postEntity.getUser().getId());
 
     }
 

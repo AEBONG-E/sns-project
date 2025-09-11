@@ -16,29 +16,38 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
+    private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/alarm/subscribe");
+
     private final String key;
     private final UserService userService;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // get header ("Bearer " + token)
-        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (header == null || !header.startsWith("Bearer ")) {
-            log.error(">>>[JwtTokenFilter]: Error occurs while getting header. header is null or invalid");
-            filterChain.doFilter(request, response);
-            return;
-        }
+        final String token;
 
         try {
+            if (TOKEN_IN_PARAM_URLS.contains(request.getRequestURI())) {
+                log.info(">>>[JwtTokenFilter] - Request with {} check the query param", request.getRequestURI());
+                token = request.getQueryString().split("=")[1].trim();
+            } else {
+                final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+                if (header == null || !header.startsWith("Bearer ")) {
+                    log.error(">>>[JwtTokenFilter]: Error occurs while getting header. header is null or invalid");
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+                token = header.split(" ")[1].trim();
+            }
             // remove "Bearer " -> extract token
-            final String token = header.split(" ")[1].trim();
+
 
             if (JwtTokenUtils.isExpired(token, key)) {
                 log.error(">>>[JwtTokenFilter]: Key is expired");
