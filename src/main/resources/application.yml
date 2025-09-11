@@ -20,6 +20,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   sql.init.platform: postgres
 
+  data:
+    redis:
+      url: ${REDIS_URL}   # Heroku dyno 환경변수 사용
+
 jwt:
   secret-key: fast_campus.sns-application-2022.secret_key
   # 30 days
